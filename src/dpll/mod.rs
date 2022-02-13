@@ -4,7 +4,6 @@ use crate::cnf::{
     Lit,
 };
 use crate::solver::{
-    Result,
     Model,
     Solver,
 };
@@ -17,7 +16,7 @@ impl DPLL {
     pub fn new(literals: Vec<Lit>) -> Self {
         Self { literals }
     }
-    fn solve_aux(&self, mut cnf: CNF, mut model: Model) -> Result {
+    fn solve_aux(&self, mut cnf: CNF, mut model: Model) -> Option<Model> {
         while let Some(x) = cnf.find_unit_clause() {
             cnf.remove_clauses_containing(&x);
             // Remove not_x from all clauses
@@ -25,7 +24,7 @@ impl DPLL {
             model.add(x);
         }
         if cnf.has_empty_clause() {
-            return Result::Unsatisfiable;
+            return None;
         }
         if cnf.has_no_clauses() {
             for lit in self.literals.iter() {
@@ -33,7 +32,7 @@ impl DPLL {
                     model.add(lit.clone());
                 }
             }
-            return Result::Satisfiable(model.clone());
+            return Some(model.clone());
         }
         // select a literal {X}
         let x = cnf
@@ -46,19 +45,13 @@ impl DPLL {
         // cnf2 = cnf + {!X}
         let mut cnf2 = cnf.clone();
         cnf2.add_clause(Clause::from(vec![x.not()]));
-        // return solve_dpll(cnf1)+solve_dpll(cnf2)
-        match self.solve_aux(cnf1, model.clone()) {
-            Result::Satisfiable(m) => Result::Satisfiable(m),
-            Result::Unsatisfiable => match self.solve_aux(cnf2, model) {
-                Result::Satisfiable(m) => Result::Satisfiable(m),
-                Result::Unsatisfiable => Result::Unsatisfiable,
-            },
-        }
+        self.solve_aux(cnf1, model.clone())
+            .or_else(|| self.solve_aux(cnf2, model))
     }
 }
 
 impl Solver for DPLL {
-    fn solve(&self, cnf: CNF) -> Result {
+    fn solve(&self, cnf: CNF) -> Option<Model> {
         self.solve_aux(cnf, Model::new())
     }
 }
