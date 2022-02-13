@@ -29,7 +29,7 @@ impl DPLL {
         if cnf.has_no_clauses() {
             for lit in self.literals.iter() {
                 if !model.0.contains(&lit) && !model.0.contains(&lit.not()) {
-                    model.add(lit.clone());
+                    model.add(*lit);
                 }
             }
             return Some(model.clone());
@@ -37,11 +37,10 @@ impl DPLL {
         // select a literal {X}
         let x = cnf
             .get_clause(0)
-            .get_lit(0)
-            .clone();
+            .get_lit(0);
         // cnf1 = cnf + {X}
         let mut cnf1 = cnf.clone();
-        cnf1.add_clause(Clause::from(vec![x.clone()]));
+        cnf1.add_clause(Clause::from(vec![x]));
         // cnf2 = cnf + {!X}
         let mut cnf2 = cnf.clone();
         cnf2.add_clause(Clause::from(vec![x.not()]));

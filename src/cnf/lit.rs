@@ -1,6 +1,6 @@
 use super::Var;
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Copy, PartialEq)]
 pub struct Lit {
     pub var: Var,
     pub pos: bool,
@@ -15,7 +15,7 @@ impl std::fmt::Display for Lit {
 impl Lit {
     pub fn not(&self) -> Lit {
         Lit {
-            var: self.var.clone(),
+            var: self.var,
             pos: !self.pos,
         }
     }

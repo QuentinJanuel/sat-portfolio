@@ -16,16 +16,16 @@ impl Clause {
         self.lits.is_empty()
     }
     pub fn get_unit_lit(&self) -> Lit {
-        self.lits[0].clone()
+        self.lits[0]
     }
     pub fn contains(&self, lit: &Lit) -> bool {
         self.lits.contains(lit)
     }
-    pub fn remove(&mut self, lit: &Lit) {
-        self.lits.retain(|l| l != lit);
+    pub fn remove(&mut self, lit: Lit) {
+        self.lits.retain(|l| l != &lit);
     }
-    pub fn get_lit(&self, index: usize) -> &Lit {
-        &self.lits[index]
+    pub fn get_lit(&self, index: usize) -> Lit {
+        self.lits[index]
     }
     pub fn get_lits(&self) -> Vec<Lit> {
         self.lits.clone()
