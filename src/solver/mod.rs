@@ -3,17 +3,25 @@ mod model;
 pub use model::Model;
 use crate::cnf::{
     CNF,
-    Clause,
 };
 
+/// Represents a SAT solver.
+/// The solver can be used either to find a model of a CNF formula,
+/// if one exists, or to enumerate all models of a CNF formula.
 pub trait Solver {
+    /// Finds a model of the given CNF formula.
+    /// Returns None if no model exists.
     fn solve(&self, cnf: CNF) -> Option<Model>;
+    /// Enumerates all models of the given CNF formula.
     fn get_all_models(&self, mut cnf: CNF) -> Vec<Model> {
+        // Default implementation
         let mut models = vec![];
+        // While there are still models to enumerate
         while let Some(model) = self.solve(cnf.clone()) {
+            // Add the model to the list
             models.push(model.clone());
-            let new_clause = Clause::from(model.0.iter().map(|l| l.not()).collect());
-            cnf.add_clause(new_clause);
+            // Remove the model from the CNF formula
+            cnf.add_clause(model.get_prevent_clause());
         }
         models
     }

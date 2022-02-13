@@ -6,60 +6,68 @@ pub use var::Var;
 pub use lit::Lit;
 pub use clause::Clause;
 
+/// Represents a CNF formula.
 #[derive(Clone)]
 pub struct CNF {
+    /// The conjunction of clauses.
     clauses: Vec<Clause>,
 }
 
 impl CNF {
+    /// Creates a new CNF formula with no clauses.
     pub fn new() -> Self {
-        Self {
-            clauses: Vec::new(),
-        }
+        Self { clauses: Vec::new() }
     }
+    /// Adds the given clause to the CNF formula.
     pub fn add_clause(&mut self, clause: Clause) {
         self.clauses.push(clause);
     }
+    /// Finds a unit clause and returns its literal if one exists.
+    /// Otherwise returns None.
     pub fn find_unit_clause(&self) -> Option<Lit> {
         for clause in &self.clauses {
-            if clause.is_unit() {
-                return Some(clause.get_unit_lit());
+            if let Some(lit) = clause.get_unit_literal() {
+                return Some(lit);
             }
         }
         None
     }
+    /// Returns true if at least one clause is empty.
     pub fn has_empty_clause(&self) -> bool {
-        for clause in &self.clauses {
-            if clause.is_empty() {
-                return true;
-            }
-        }
-        false
+        self.clauses.iter().any(|c| c.is_empty())
     }
-    pub fn remove_clauses_containing(&mut self, lit: &Lit) {
-        self.clauses.retain(|clause| {
-            !clause.contains(lit)
-        });
+    /// Removes all clauses containing the given literal.
+    pub fn remove_clauses_containing(&mut self, lit: Lit) {
+        self.clauses.retain(|c| !c.contains(lit));
     }
+    /// Removes the given literal from all clauses.
     pub fn remove_lit(&mut self, lit: Lit) {
         for clause in &mut self.clauses {
             clause.remove(lit);
         }
     }
-    pub fn has_no_clause(&self) -> bool {
+    /// Returns true if the CNF formula has no clauses.
+    pub fn has_no_clauses(&self) -> bool {
         self.clauses.is_empty()
     }
-    pub fn get_clause(&self, index: usize) -> &Clause {
-        &self.clauses[index]
+    /// Returns the clauses in the CNF formula.
+    pub fn get_clauses(&self) -> &Vec<Clause> {
+        &self.clauses
     }
-    pub fn get_lits(&self) -> Vec<Lit> {
-        self.clauses
+    /// Returns the list of variables in the CNF formula.
+    pub fn get_variables(&self) -> Vec<Var> {
+        let mut vars = self.clauses
             .iter()
             .flat_map(|clause| clause.get_lits())
-            .collect::<Vec<_>>()
+            .map(|lit| lit.get_var())
+            .collect::<Vec<_>>();
+        vars.sort();  // Sort the variables, needed for the next step.
+        vars.dedup(); // Remove duplicates.
+        vars
     }
 }
 
+// Display
 impl std::fmt::Display for CNF {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.clauses.iter().map(|c| format!("{}", c)).collect::<Vec<_>>().join("\n"))
