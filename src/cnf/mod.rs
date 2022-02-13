@@ -41,7 +41,7 @@ impl CNF {
             !clause.contains(lit)
         });
     }
-    pub fn remove_lit(&mut self, lit: &Lit) {
+    pub fn remove_lit(&mut self, lit: Lit) {
         for clause in &mut self.clauses {
             clause.remove(lit);
         }

@@ -20,7 +20,7 @@ impl DPLL {
         while let Some(x) = cnf.find_unit_clause() {
             cnf.remove_clauses_containing(&x);
             // Remove not_x from all clauses
-            cnf.remove_lit(&x.not());
+            cnf.remove_lit(x.not());
             model.add(x);
         }
         if cnf.has_empty_clause() {
