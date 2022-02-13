@@ -46,7 +46,7 @@ impl CNF {
             clause.remove(lit);
         }
     }
-    pub fn has_no_clauses(&self) -> bool {
+    pub fn has_no_clause(&self) -> bool {
         self.clauses.is_empty()
     }
     pub fn get_clause(&self, index: usize) -> &Clause {

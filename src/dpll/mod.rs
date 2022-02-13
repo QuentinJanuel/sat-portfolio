@@ -26,7 +26,7 @@ impl DPLL {
         if cnf.has_empty_clause() {
             return None;
         }
-        if cnf.has_no_clauses() {
+        if cnf.has_no_clause() {
             for lit in self.literals.iter() {
                 if !model.0.contains(&lit) && !model.0.contains(&lit.not()) {
                     model.add(*lit);
