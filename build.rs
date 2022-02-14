@@ -1,10 +1,11 @@
 use std::{
     io,
+    env,
     fs::{
         self,
         File,
     },
-    path::Path,
+    path::{Path, PathBuf},
 };
 
 fn download(url: &str, to: &str) {
@@ -42,7 +43,14 @@ fn main() {
         .file("c/minisat/minisat/simp/SimpSolver.cc")
         .file("c/minisat/minisat/utils/System.cc")
         .file("c/minisat-c-bindings/minisat.cc")
-        // .define("__STDC_LIMIT_MACROS", None)
-        // .define("__STDC_FORMAT_MACROS", None)
         .compile("minisat");
+    let bindings = bindgen::Builder::default()
+        .clang_arg("-Ic/minisat-c-bindings")
+        .header("c/wrapper.h")
+        .generate()
+        .expect("Could not create bindings to minisat");
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    bindings
+        .write_to_file(out_path.join("minisat-bindings.rs"))
+        .expect("Couldn't write bindings for minisat");
 }
