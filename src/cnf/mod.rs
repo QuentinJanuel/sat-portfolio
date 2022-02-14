@@ -1,6 +1,8 @@
 mod var;
 mod lit;
 mod clause;
+#[macro_use]
+mod macros;
 
 pub use var::Var;
 pub use lit::Lit;
