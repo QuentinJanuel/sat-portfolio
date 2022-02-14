@@ -1,3 +1,6 @@
 [submodule "c/minisat"]
 	path = c/minisat
 	url = https://github.com/agurfinkel/minisat.git
+[submodule "c/minisat-c-bindings"]
+	path = c/minisat-c-bindings
+	url = https://github.com/niklasso/minisat-c-bindings.git

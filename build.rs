@@ -41,6 +41,7 @@ fn main() {
         .file("c/minisat/minisat/core/Solver.cc")
         .file("c/minisat/minisat/simp/SimpSolver.cc")
         .file("c/minisat/minisat/utils/System.cc")
+        .file("c/minisat-c-bindings/minisat.cc")
         // .define("__STDC_LIMIT_MACROS", None)
         // .define("__STDC_FORMAT_MACROS", None)
         .compile("minisat");
