@@ -1,8 +1,4 @@
 /// A macro to create a clause
-/// # Example
-/// ```
-/// let clause = clause![1, -2, 3];
-/// ```
 #[macro_export]
 macro_rules! clause {
     ($( $x:expr ),*) => {
@@ -27,13 +23,6 @@ macro_rules! clause {
 }
 
 /// A macro to create CNF formulas
-/// # Example
-/// ```
-/// let cnf = cnf![
-///    1, 2, 3;
-///   -2, 1;
-/// ];
-/// ```
 #[macro_export]
 macro_rules! cnf {
     () => {
