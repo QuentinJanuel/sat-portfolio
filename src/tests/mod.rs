@@ -13,4 +13,9 @@ fn count_models() {
     let models = DPLL::new()
         .get_all_models(cnf);
     assert_eq!(models.len(), 2);
+    let cnf = cnf![
+        1;
+        -1
+    ];
+    assert!(DPLL::new().solve(cnf).is_none());
 }
