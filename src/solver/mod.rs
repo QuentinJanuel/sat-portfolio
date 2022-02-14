@@ -1,4 +1,5 @@
 mod model;
+pub mod dpll;
 
 pub use model::Model;
 use crate::cnf::{

@@ -1,6 +1,8 @@
 use crate::{
-    dpll::DPLL,
-    solver::Solver,
+    solver::{
+        Solver,
+        dpll::DPLL,
+    },
     cnf,
 };
 
