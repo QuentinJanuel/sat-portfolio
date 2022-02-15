@@ -1,5 +1,5 @@
 /// Represents an atom in a CNF formula.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Var(pub u32);
 
 // Display

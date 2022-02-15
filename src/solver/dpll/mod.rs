@@ -60,8 +60,8 @@ impl DPLL {
 }
 
 impl Solver for DPLL {
-    fn solve(&self, cnf: CNF) -> Option<Model> {
+    fn solve(&self, cnf: &CNF) -> Option<Model> {
         let vars = cnf.get_variables();
-        self.solve_aux(cnf, &vars, Model::new())
+        self.solve_aux(cnf.clone(), &vars, Model::new())
     }
 }
