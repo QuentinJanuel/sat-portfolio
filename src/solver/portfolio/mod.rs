@@ -33,7 +33,10 @@ impl Solver for Portfolio {
             let solver = solver.clone();
             let cnf = cnf.clone();
             thread::spawn(move || {
-                tx.send(solver.solve(&cnf)).unwrap();
+                tx.send(solver.solve(&cnf))
+                    .unwrap_or_else(|err| {
+                        // println!("Failed to send: {}", err);
+                    });
             });
         }
         rx.recv().expect("Parallelism failed")
