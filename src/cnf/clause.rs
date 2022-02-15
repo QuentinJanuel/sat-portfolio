@@ -9,9 +9,16 @@ pub struct Clause {
 }
 
 impl Clause {
+    /// Creates an empty clause.
+    pub fn new() -> Self {
+        Self { lits: vec![] }
+    }
     /// Creates a new clause from the given literals.
     pub fn from(lits: Vec<Lit>) -> Self {
         Self { lits }
+    }
+    pub fn add(&mut self, lit: Lit) {
+        self.lits.push(lit);
     }
     /// Returns the literals in the clause.
     pub fn get_lits(&self) -> &Vec<Lit> {
