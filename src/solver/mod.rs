@@ -6,6 +6,7 @@ pub mod portfolio;
 pub use model::Model;
 use crate::cnf::{
     CNF,
+    Var,
 };
 use dyn_clone::DynClone;
 
@@ -17,7 +18,10 @@ pub trait Solver: DynClone {
     /// Returns None if no model exists.
     fn solve(&self, cnf: &CNF) -> Option<Model>;
     /// Enumerates all models of the given CNF formula.
-    fn get_all_models(&self, cnf: &CNF) -> Vec<Model> {
+    /// cnf: The CNF formula to enumerate.
+    /// vars: The list of variables we are interested in.
+    /// If None, all variables
+    fn get_all_models(&self, cnf: &CNF, vars: Option<&Vec<Var>>) -> Vec<Model> {
         // Default implementation
         let mut cnf = cnf.clone();
         let mut models = vec![];
@@ -26,7 +30,7 @@ pub trait Solver: DynClone {
             // Add the model to the list
             models.push(model.clone());
             // Remove the model from the CNF formula
-            cnf.add_clause(model.get_prevent_clause());
+            cnf.add_clause(model.get_prevent_clause(vars));
         }
         models
     }
