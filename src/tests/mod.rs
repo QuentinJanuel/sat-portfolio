@@ -3,6 +3,7 @@ use crate::{
         Solver,
         dpll::DPLL,
         minisat::Minisat,
+        portfolio::Portfolio,
     },
     cnf,
 };
@@ -25,4 +26,11 @@ fn test_solver<S: Solver>(solver: S) {
 fn count_models() {
     test_solver(DPLL::new());
     test_solver(Minisat::new());
+    let portfolio = Portfolio::from(vec![
+        Box::new(DPLL::new()),
+        Box::new(DPLL::new()),
+        Box::new(DPLL::new()),
+        Box::new(Minisat::new()),
+    ]);
+    test_solver(portfolio);
 }

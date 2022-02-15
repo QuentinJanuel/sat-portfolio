@@ -1,16 +1,18 @@
 mod model;
 pub mod dpll;
 pub mod minisat;
+pub mod portfolio;
 
 pub use model::Model;
 use crate::cnf::{
     CNF,
 };
+use dyn_clone::DynClone;
 
 /// Represents a SAT solver.
 /// The solver can be used either to find a model of a CNF formula,
 /// if one exists, or to enumerate all models of a CNF formula.
-pub trait Solver {
+pub trait Solver: DynClone {
     /// Finds a model of the given CNF formula.
     /// Returns None if no model exists.
     fn solve(&self, cnf: &CNF) -> Option<Model>;
@@ -29,3 +31,5 @@ pub trait Solver {
         models
     }
 }
+
+dyn_clone::clone_trait_object!(Solver);
