@@ -28,8 +28,6 @@ fn count_models() {
     test_solver(Minisat::new());
     let portfolio = Portfolio::from(vec![
         Box::new(DPLL::new()),
-        Box::new(DPLL::new()),
-        Box::new(DPLL::new()),
         Box::new(Minisat::new()),
     ]);
     test_solver(portfolio);
