@@ -21,6 +21,7 @@ use crate::{
 };
 use std::collections::HashMap;
 
+/// The Minisat solver
 #[derive(Clone)]
 pub struct Minisat;
 

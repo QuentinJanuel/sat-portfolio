@@ -34,6 +34,18 @@ impl Model {
             .collect();
         Clause::from(lits)
     }
+    /// Returns the list of literals
+    pub fn get_literals(&self) -> &Vec<Lit> {
+        &self.0
+    }
+    /// Returns the list of positive variables
+    pub fn get_pos_vars(&self) -> Vec<Var> {
+        self.0
+            .iter()
+            .filter(|l| l.get_sign())
+            .map(|l| l.get_var())
+            .collect()
+    }
 }
 
 // Display

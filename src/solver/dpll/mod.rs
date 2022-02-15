@@ -9,12 +9,12 @@ use crate::solver::{
     Solver,
 };
 
-/// A SAT solver that uses DPLL algorithm.
+/// A SAT solver that uses DPLL algorithm
 #[derive(Clone)]
 pub struct DPLL;
 
 impl DPLL {
-    /// Creates a new DPLL solver.
+    /// Creates a new DPLL solver
     pub fn new() -> Self { Self }
     /// Chooses the next literal to assign
     fn choose_literal(&self, cnf: &CNF) -> Lit {
