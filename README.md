@@ -13,9 +13,6 @@ There are two types of solvers:
 ### External
 - Minisat
 
-## Prerequisites
-- [CLANG](https://rust-lang.github.io/rust-bindgen/requirements.html)
-
 ## Authors
 - Christophe Yang
 - Quentin Januel
