@@ -1,10 +1,13 @@
 use super::{
     Solver,
     Model,
+    config::Config,
 };
 use crate::cnf::CNF;
-use std::thread;
-use std::sync::mpsc;
+use std::{
+    thread,
+    sync::mpsc,
+};
 
 /// A portfolio of SAT solvers
 #[derive(Clone)]
@@ -23,22 +26,58 @@ impl Portfolio {
 }
 
 impl Solver for Portfolio {
-    fn solve(&self, cnf: &CNF) -> Option<Model> {
-        // Starts all the solvers in parallel
+    fn solve_with_config(
+        &self,
+        cnf: &CNF,
+        config: &Config,
+    ) -> Option<Model> {
+        // Starts all the subsolvers in parallel
         // and returns the first result
         let cnf = cnf.clone();
+        // Every subsolver will have this config
+        let subconfig = Config::default();
         let (tx, rx) = mpsc::channel();
         for solver in &self.solvers {
+            // Spawn a thread for each subsolver
             let tx = tx.clone();
             let solver = solver.clone();
             let cnf = cnf.clone();
+            let subconfig = subconfig.clone();
             thread::spawn(move || {
-                tx.send(solver.solve(&cnf))
-                    .unwrap_or_else(|err| {
-                        // println!("Failed to send: {}", err);
-                    });
+                let res = solver.solve_with_config(
+                    &cnf,
+                    &subconfig,
+                );
+                tx.send(res).ok();
             });
         }
-        rx.recv().expect("Parallelism failed")
+        let handle = {
+            // This checker thread will kill all the subsolvers
+            // if the main config requires a kill
+            let tx = tx.clone();
+            let thread_config = config.clone();
+            let thread_subconfig = subconfig.clone();
+            thread::spawn(move || {
+                loop {
+                    // If the subsolvers are killed, we are done
+                    if thread_subconfig.get_kill() {
+                        break;
+                    }
+                    // Kill detected, kill all the subsolvers
+                    if thread_config.get_kill() {
+                        thread_subconfig.kill();
+                    }
+                    thread::yield_now();
+                }
+                // Unlock the receiver
+                tx.send(None).ok();
+            })
+        };
+        // Wait for the first response
+        let res = rx.recv().unwrap();
+        // Kill the checker thread and all the subsolvers
+        subconfig.kill();
+        handle.join().unwrap();
+        res
     }
 }

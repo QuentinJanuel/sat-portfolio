@@ -1,13 +1,16 @@
-use crate::cnf::{
-    CNF,
-    Clause,
-    Lit,
-    Var,
+use crate::{
+    cnf::{
+        CNF,
+        Clause,
+        Lit,
+        Var,
+    },
+    solver::{
+        Model,
+        Solver,
+    },
 };
-use crate::solver::{
-    Model,
-    Solver,
-};
+use super::config::Config;
 
 /// A SAT solver that uses DPLL algorithm
 #[derive(Clone)]
@@ -28,7 +31,16 @@ impl DPLL {
         }
     }
     // A helper function to simplify the code
-    fn solve_aux(&self, mut cnf: CNF, vars: &Vec<Var>, mut model: Model) -> Option<Model> {
+    fn solve_aux(
+        &self,
+        mut cnf: CNF,
+        vars: &Vec<Var>,
+        mut model: Model,
+        config: &Config,
+    ) -> Option<Model> {
+        if config.get_kill() {
+            return Some(model);
+        }
         self.unit_propagation(&mut cnf, &mut model);
         // If an empty clause exists, the formula is unsatisfiable
         if cnf.has_empty_clause() {
@@ -55,14 +67,29 @@ impl DPLL {
         let mut cnf2 = cnf;
         cnf2.add_clause(Clause::from(vec![x.not()]));
         // Returns the first solution found, if any
-        self.solve_aux(cnf1, vars, model.clone())
-            .or_else(|| self.solve_aux(cnf2, vars, model))
+        self.solve_aux(
+            cnf1,
+            vars,
+            model.clone(),
+            config,
+        )
+            .or_else(|| self.solve_aux(
+                cnf2,
+                vars,
+                model,
+                config,
+            ))
     }
 }
 
 impl Solver for DPLL {
-    fn solve(&self, cnf: &CNF) -> Option<Model> {
+    fn solve_with_config(&self, cnf: &CNF, config: &Config) -> Option<Model> {
         let vars = cnf.get_variables();
-        self.solve_aux(cnf.clone(), &vars, Model::new())
+        self.solve_aux(
+            cnf.clone(),
+            &vars,
+            Model::new(),
+            config,
+        )
     }
 }

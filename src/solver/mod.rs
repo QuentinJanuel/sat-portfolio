@@ -2,13 +2,12 @@ mod model;
 pub mod dpll;
 pub mod minisat;
 pub mod portfolio;
+pub mod config;
 
 pub use model::Model;
-use crate::cnf::{
-    CNF,
-    Var,
-};
+use crate::cnf::CNF;
 use dyn_clone::DynClone;
+use config::{Config, ConfigAll};
 
 /// Represents a SAT solver.
 /// The solver can be used either to find a model of a CNF formula,
@@ -16,21 +15,51 @@ use dyn_clone::DynClone;
 pub trait Solver: DynClone {
     /// Finds a model of the given CNF formula.
     /// Returns None if no model exists.
-    fn solve(&self, cnf: &CNF) -> Option<Model>;
+    fn solve(&self, cnf: &CNF) -> Option<Model> {
+        self.solve_with_config(
+            cnf,
+            &Config::default(),
+        )
+    }
+    /// Same as solve but with more options.
+    fn solve_with_config(
+        &self,
+        cnf: &CNF,
+        config: &Config,
+    ) -> Option<Model>;
     /// Enumerates all models of the given CNF formula.
     /// cnf: The CNF formula to enumerate.
     /// vars: The list of variables we are interested in.
     /// If None, all variables
-    fn get_all_models(&self, cnf: &CNF, vars: Option<&Vec<Var>>) -> Vec<Model> {
+    fn get_all_models(&self, cnf: &CNF) -> Vec<Model> {
+        self.get_all_models_with_config(
+            cnf,
+            &ConfigAll::default(),
+        )
+    }
+    /// Same as get_all_models but with more options.
+    fn get_all_models_with_config(
+        &self,
+        cnf: &CNF,
+        config_all: &ConfigAll,
+    ) -> Vec<Model> {
         // Default implementation
         let mut cnf = cnf.clone();
         let mut models = vec![];
+        let solve_config = Config::from_config_all(config_all);
         // While there are still models to enumerate
-        while let Some(model) = self.solve(&cnf) {
+        while let Some(model) = self.solve_with_config(
+            &cnf,
+            &solve_config,
+        ) {
+            // Stop if the solver is killed
+            if config_all.get_kill() {
+                return vec![];
+            }
             // Add the model to the list
             models.push(model.clone());
             // Remove the model from the CNF formula
-            cnf.add_clause(model.get_prevent_clause(vars));
+            cnf.add_clause(model.get_prevent_clause(config_all.get_vars()));
         }
         models
     }

@@ -13,7 +13,7 @@ fn test_solver<S: Solver>(solver: S) {
         1,  2;
         1
     ];
-    let models = solver.get_all_models(&cnf, None);
+    let models = solver.get_all_models(&cnf);
     assert_eq!(models.len(), 2);
     let cnf = cnf![
         1;
