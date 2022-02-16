@@ -81,3 +81,16 @@ impl Solver for Portfolio {
         res
     }
 }
+
+// A nice macro to create a portfolio of solvers
+#[macro_export]
+macro_rules! portfolio {
+    ($($solver:expr),+ $(,)?) => (
+        {
+            use $crate::solver::portfolio::Portfolio;
+            Portfolio::from(vec![
+                $(Box::new($solver)),+
+            ])
+        }
+    );
+}
