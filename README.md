@@ -8,10 +8,11 @@ There are two types of solvers:
 - **External SAT solvers** that can be used with this library.
 
 ## Available solvers
-### Internal
-- DPLL
 ### External
 - Minisat
+- Manysat
+### Internal
+- DPLL
 
 ## Authors
 - Christophe Yang
