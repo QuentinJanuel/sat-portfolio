@@ -25,16 +25,15 @@ fn download(url: &str, to: &str) {
         .expect(&format!("Failed to download {}", to));
 }
 
-#[allow(unused)]
-fn make_bindings(name: &str) {
-    bindgen::Builder::default()
-        .clang_arg(format!("-Ic/{}-c-bindings", name))
-        .header(format!("c/wrappers/{}-wrapper.h", name))
-        .generate()
-        .expect(&format!("Could not create bindings to {}", name))
-        .write_to_file(format!("src/solver/{}/bindings.rs", name))
-        .expect(&format!("Couldn't write bindings for {}", name));
-}
+// fn make_bindings(name: &str) {
+//     bindgen::Builder::default()
+//         .clang_arg(format!("-Ic/{}-c-bindings", name))
+//         .header(format!("c/wrappers/{}-wrapper.h", name))
+//         .generate()
+//         .expect(&format!("Could not create bindings to {}", name))
+//         .write_to_file(format!("src/solver/{}/bindings.rs", name))
+//         .expect(&format!("Couldn't write bindings for {}", name));
+// }
 
 fn main() {
     download(
