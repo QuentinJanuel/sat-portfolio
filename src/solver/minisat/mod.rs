@@ -69,10 +69,10 @@ impl Solver for Minisat {
                     bindings::minisat_addClause_addLit(ptr, m_lit);
                 }
             }
-            let conflict = unsafe {
+            let ok = unsafe {
                 bindings::minisat_addClause_commit(ptr) != 0
             };
-            if !conflict {
+            if !ok {
                 return None;
             }
         }

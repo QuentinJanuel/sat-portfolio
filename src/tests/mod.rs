@@ -3,6 +3,7 @@ use crate::{
         Solver,
         dpll::DPLL,
         minisat::Minisat,
+        manysat::Manysat,
     },
 };
 
@@ -21,11 +22,14 @@ fn test_solver<S: Solver>(solver: S) {
 }
 
 #[test]
-fn count_models() {
+fn test_solvers() {
     test_solver(DPLL::new());
     test_solver(Minisat::new());
+    test_solver(Manysat::new());
     test_solver(portfolio![
         DPLL::new(),
         Minisat::new(),
+        Manysat::new(),
     ]);
+    test_solver(portfolio![Manysat::new()]);
 }

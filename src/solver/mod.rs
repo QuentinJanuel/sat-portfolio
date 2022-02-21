@@ -1,6 +1,7 @@
 mod model;
 pub mod dpll;
 pub mod minisat;
+pub mod manysat;
 #[macro_use]
 pub mod portfolio;
 pub mod config;

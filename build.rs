@@ -25,6 +25,17 @@ fn download(url: &str, to: &str) {
         .expect(&format!("Failed to download {}", to));
 }
 
+#[allow(unused)]
+fn make_bindings(name: &str) {
+    bindgen::Builder::default()
+        .clang_arg(format!("-Ic/{}-c-bindings", name))
+        .header(format!("c/wrappers/{}-wrapper.h", name))
+        .generate()
+        .expect(&format!("Could not create bindings to {}", name))
+        .write_to_file(format!("src/solver/{}/bindings.rs", name))
+        .expect(&format!("Couldn't write bindings for {}", name));
+}
+
 fn main() {
     download(
         "https://raw.githubusercontent.com/madler/zlib/master/zlib.h",
@@ -34,6 +45,7 @@ fn main() {
         "https://raw.githubusercontent.com/madler/zlib/master/zconf.h",
         "c/lib/zconf.h",
     );
+    // Minisat
     cc::Build::new()
         .cpp(true)
         .include("c/minisat")
@@ -43,11 +55,16 @@ fn main() {
         .file("c/minisat/minisat/utils/System.cc")
         .file("c/minisat-c-bindings/minisat.cc")
         .compile("minisat");
-    // bindgen::Builder::default()
-    //     .clang_arg("-Ic/minisat-c-bindings")
-    //     .header("c/wrapper.h")
-    //     .generate()
-    //     .expect("Could not create bindings to minisat")
-    //     .write_to_file("src/solver/minisat/bindings.rs")
-    //     .expect("Couldn't write bindings for minisat");
+    // Manysat
+    cc::Build::new()
+        .cpp(true)
+        .include("c/lib")
+        .include("c/manysat")
+        .file("c/manysat/core/Solver.cc")
+        .file("c/manysat/core/Cooperation.cc")
+        .file("c/manysat-c-bindings/manysat.cc")
+        .compile("manysat");
+    // Bindings
+    // make_bindings("minisat");
+    // make_bindings("manysat");
 }

@@ -31,6 +31,10 @@ impl Solver for Portfolio {
         cnf: &CNF,
         config: &Config,
     ) -> Option<Model> {
+        // If there is only one solver, just use it
+        if self.solvers.len() == 1 {
+            return self.solvers[0].solve_with_config(cnf, config);
+        }
         // Starts all the subsolvers in parallel
         // and returns the first result
         let cnf = cnf.clone();
