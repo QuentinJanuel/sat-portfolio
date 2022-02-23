@@ -78,7 +78,15 @@ fn main() {
         } else {
             panic!("Unsupported architecture");
         };
-        println!("cargo:rustc-link-search=native=./c/pthread-win32/lib/{}", arch);
+        println!(
+            "cargo:rustc-link-search=native={}",
+            Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("c")
+                .join("pthread-win32")
+                .join("lib")
+                .join(arch)
+                .display(),
+        );
         println!("cargo:rustc-link-lib=pthreadVC3");
     }
     cc::Build::new()
