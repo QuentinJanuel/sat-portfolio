@@ -90,10 +90,18 @@ fn main() {
         println!("cargo:rustc-link-lib=pthreadVC3");
     }
     cc::Build::new()
+        .warnings(false)
         .cpp(true)
         .includes(includes)
+        // .file("c/glucose/parallel/MultiSolvers.cc")
+        // .file("c/glucose/parallel/SolverConfiguration.cc")
         // .file("c/glucose/parallel/ParallelSolver.cc")
-        // .file("c/glucose/core/Solver.cc")
+        // .file("c/glucose/parallel/SharedCompanion.cc")
+        // .file("c/glucose/parallel/SolverCompanion.cc")
+        // .file("c/glucose/parallel/ClausesBuffer.cc")
+        .file("c/glucose/simp/SimpSolver.cc")
+        .file("c/glucose/core/Solver.cc")
+        .file("c/glucose/utils/System.cc")
         .file("c/glucose-c-bindings/glucose.cc")
         .compile("glucose");
     // Bindings
