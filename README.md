@@ -11,6 +11,7 @@ There are two types of solvers:
 ### External
 - Minisat
 - Manysat
+- Glucose
 ### Internal
 - DPLL
 
