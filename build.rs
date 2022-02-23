@@ -26,6 +26,7 @@ fn download(url: &str, to: &str) {
 }
 
 // fn make_bindings(name: &str) {
+//     println!("cargo:rerun-if-changed=src/solver/{}/bindings.rs", name);
 //     bindgen::Builder::default()
 //         .clang_arg(format!("-Ic/{}-c-bindings", name))
 //         .header(format!("c/wrappers/{}-wrapper.h", name))
@@ -63,7 +64,32 @@ fn main() {
         .file("c/manysat/core/Cooperation.cc")
         .file("c/manysat-c-bindings/manysat.cc")
         .compile("manysat");
+    // Glucose
+    let mut includes = vec![
+        "c/lib",
+        "c/glucose",
+    ];
+    if cfg!(windows) {
+        includes.push("c/pthread-win32/include");
+        let arch = if cfg!(target_arch = "x86_64") {
+            "x64"
+        } else if cfg!(target_arch = "x86") {
+            "x86"
+        } else {
+            panic!("Unsupported architecture");
+        };
+        println!("cargo:rustc-link-search=c/pthread-win32/lib/{}", arch);
+        println!("cargo:rustc-link-lib=pthreadVC3");
+    }
+    cc::Build::new()
+        .cpp(true)
+        .includes(includes)
+        // .file("c/glucose/parallel/ParallelSolver.cc")
+        // .file("c/glucose/core/Solver.cc")
+        .file("c/glucose-c-bindings/glucose.cc")
+        .compile("glucose");
     // Bindings
     // make_bindings("minisat");
     // make_bindings("manysat");
+    // make_bindings("glucose");
 }
