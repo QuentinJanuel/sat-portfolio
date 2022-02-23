@@ -7,3 +7,6 @@
 [submodule "c/manysat"]
 	path = c/manysat
 	url = https://github.com/rohitjha/manysat.git
+[submodule "c/glucose"]
+	path = c/glucose
+	url = https://github.com/QuentinJanuel/glucose.git
