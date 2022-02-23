@@ -9,7 +9,6 @@ use std::{
 
 fn download(url: &str, to: &str) {
     let path = Path::new(to);
-    println!("cargo:rerun-if-changed={}", path.display());
     if path.is_file() {
         println!("File already exists: {}", to);
         return;
@@ -23,6 +22,7 @@ fn download(url: &str, to: &str) {
         .expect(&format!("Failed to create file {}", to));
     io::copy(&mut resp, &mut out)
         .expect(&format!("Failed to download {}", to));
+    println!("cargo:rerun-if-changed={}", path.display());
 }
 
 // fn make_bindings(name: &str) {
@@ -78,7 +78,7 @@ fn main() {
         } else {
             panic!("Unsupported architecture");
         };
-        println!("cargo:rustc-link-search=c/pthread-win32/lib/{}", arch);
+        println!("cargo:rustc-link-search=native=./c/pthread-win32/lib/{}", arch);
         println!("cargo:rustc-link-lib=pthreadVC3");
     }
     cc::Build::new()
