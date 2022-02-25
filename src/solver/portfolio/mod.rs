@@ -81,7 +81,7 @@ impl Solver for Portfolio {
         let res = rx.recv().unwrap();
         // Kill the checker thread and all the subsolvers
         subconfig.kill();
-        handle.join().unwrap();
+        // handle.join().unwrap();
         res
     }
 }
