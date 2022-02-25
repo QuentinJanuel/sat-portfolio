@@ -22,7 +22,6 @@ fn download(url: &str, to: &str) {
         .expect(&format!("Failed to create file {}", to));
     io::copy(&mut resp, &mut out)
         .expect(&format!("Failed to download {}", to));
-    println!("cargo:rerun-if-changed={}", path.display());
 }
 
 // fn make_bindings(name: &str) {
