@@ -6,7 +6,7 @@ use super::{
 use crate::cnf::CNF;
 use std::{
     thread,
-    sync::mpsc,
+    sync::{mpsc, Arc},
 };
 
 /// A portfolio of SAT solvers
@@ -37,7 +37,8 @@ impl Solver for Portfolio {
         }
         // Starts all the subsolvers in parallel
         // and returns the first result
-        let cnf = cnf.clone();
+        let cnf = Arc::new(cnf.clone());
+        // let cnf = cnf.clone();
         // Every subsolver will have this config
         let subconfig = Config::default();
         let (tx, rx) = mpsc::channel();
@@ -45,11 +46,11 @@ impl Solver for Portfolio {
             // Spawn a thread for each subsolver
             let tx = tx.clone();
             let solver = solver.clone();
-            let cnf = cnf.clone();
+            let cnf = Arc::clone(&cnf);
             let subconfig = subconfig.clone();
             thread::spawn(move || {
                 let res = solver.solve_with_config(
-                    &cnf,
+                    &*cnf,
                     &subconfig,
                 );
                 tx.send(res).ok();
@@ -81,7 +82,7 @@ impl Solver for Portfolio {
         let res = rx.recv().unwrap();
         // Kill the checker thread and all the subsolvers
         subconfig.kill();
-        // handle.join().unwrap();
+        handle.join().unwrap();
         res
     }
 }
