@@ -13,7 +13,6 @@ use crate::{
 use super::config::Config;
 
 /// A SAT solver that uses DPLL algorithm
-#[derive(Clone)]
 pub struct DPLL;
 
 impl DPLL {

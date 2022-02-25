@@ -23,7 +23,6 @@ use std::collections::HashMap;
 use super::config::Config;
 
 /// The Minisat solver
-#[derive(Clone)]
 pub struct Minisat;
 
 impl Minisat {

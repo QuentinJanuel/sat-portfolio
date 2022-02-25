@@ -7,15 +7,16 @@ pub mod glucose;
 pub mod portfolio;
 pub mod config;
 
+// use std::{ops::Deref, sync::Arc};
+
 pub use model::Model;
 use crate::cnf::CNF;
-use dyn_clone::DynClone;
 use config::{Config, ConfigAll};
 
 /// Represents a SAT solver.
 /// The solver can be used either to find a model of a CNF formula,
 /// if one exists, or to enumerate all models of a CNF formula.
-pub trait Solver: DynClone {
+pub trait Solver {
     /// Finds a model of the given CNF formula.
     /// Returns None if no model exists.
     fn solve(&self, cnf: &CNF) -> Option<Model> {
@@ -34,7 +35,7 @@ pub trait Solver: DynClone {
     /// cnf: The CNF formula to enumerate.
     /// vars: The list of variables we are interested in.
     /// If None, all variables
-    fn get_all_models(&self, cnf: &CNF) -> Vec<Model> {
+    fn get_all_models(&self, cnf: &mut CNF) -> Vec<Model> {
         self.get_all_models_with_config(
             cnf,
             &ConfigAll::default(),
@@ -43,11 +44,10 @@ pub trait Solver: DynClone {
     /// Same as get_all_models but with more options.
     fn get_all_models_with_config(
         &self,
-        cnf: &CNF,
+        cnf: &mut CNF,
         config_all: &ConfigAll,
     ) -> Vec<Model> {
         // Default implementation
-        let mut cnf = cnf.clone();
         let mut models = vec![];
         let solve_config = Config::from_config_all(config_all);
         // While there are still models to enumerate
@@ -67,5 +67,3 @@ pub trait Solver: DynClone {
         models
     }
 }
-
-dyn_clone::clone_trait_object!(Solver);

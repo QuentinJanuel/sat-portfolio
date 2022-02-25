@@ -23,7 +23,6 @@ use std::collections::HashMap;
 use super::config::Config;
 
 /// The Glucose solver
-#[derive(Clone)]
 pub struct Glucose {
     preprocessing: bool,
 }

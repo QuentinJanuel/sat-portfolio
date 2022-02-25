@@ -23,7 +23,6 @@ use std::collections::HashMap;
 use super::config::Config;
 
 /// The Manysat solver
-#[derive(Clone)]
 pub struct Manysat {
     n_threads: u32,
     clause_limit: u32,

@@ -13,7 +13,7 @@ fn test_solver<S: Solver>(solver: S) {
         1, 2;
         1
     ];
-    let models = solver.get_all_models(&cnf);
+    let models = solver.get_all_models(&mut cnf.clone());
     assert_eq!(models.len(), 2);
     let cnf = cnf![
         1;
@@ -34,6 +34,11 @@ fn test_solvers() {
     ]);
     test_solver(portfolio![Manysat::new()]);
     test_solver(Glucose::new());
+    test_solver({
+        let mut s = Glucose::new();
+        s.enable_preprocessing();
+        s
+    });
     test_solver(portfolio![
         Glucose::new(),
         DPLL::new(),

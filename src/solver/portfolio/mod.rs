@@ -9,15 +9,17 @@ use std::{
     sync::{mpsc, Arc},
 };
 
+pub trait ThreadableSolver: Solver + Send + Sync {}
+impl<T: Solver + Send + Sync> ThreadableSolver for T {}
+
 /// A portfolio of SAT solvers
-#[derive(Clone)]
 pub struct Portfolio {
-    solvers: Vec<Box<dyn Solver + Send>>,
+    solvers: Vec<Arc<dyn ThreadableSolver>>,
 }
 
 impl Portfolio {
     /// Creates a new portfolio of solvers with the given solvers
-    pub fn from(solvers: Vec<Box<dyn Solver + Send>>) -> Self {
+    pub fn from(solvers: Vec<Arc<dyn ThreadableSolver>>) -> Self {
         if solvers.len() == 0 {
             panic!("No solvers provided");
         }
@@ -38,14 +40,13 @@ impl Solver for Portfolio {
         // Starts all the subsolvers in parallel
         // and returns the first result
         let cnf = Arc::new(cnf.clone());
-        // let cnf = cnf.clone();
         // Every subsolver will have this config
         let subconfig = Config::default();
         let (tx, rx) = mpsc::channel();
         for solver in &self.solvers {
             // Spawn a thread for each subsolver
             let tx = tx.clone();
-            let solver = solver.clone();
+            let solver = Arc::clone(solver);
             let cnf = Arc::clone(&cnf);
             let subconfig = subconfig.clone();
             thread::spawn(move || {
@@ -94,7 +95,7 @@ macro_rules! portfolio {
         {
             use $crate::solver::portfolio::Portfolio;
             Portfolio::from(vec![
-                $(Box::new($solver)),+
+                $(std::sync::Arc::new($solver)),+
             ])
         }
     );
