@@ -4,15 +4,19 @@
 
 struct glucose_solver_t : public Glucose::SimpSolver {
     Glucose::vec<Glucose::Lit> clause;
+    bool preprocessing;
 };
 
 extern "C" {
 
 #include "glucose.h"
 
-glucose_solver* glucose_new() {
+glucose_solver* glucose_new(glucose_bool preprocessing) {
     glucose_solver* s = new glucose_solver_t();
-    s->eliminate(true);
+    s->preprocessing = preprocessing;
+    if (!s->preprocessing) {
+        s->eliminate(true);
+    }
     return s;
 }
 
@@ -49,7 +53,9 @@ glucose_var glucose_lit_to_var(glucose_lit p) {
 }
 
 glucose_bool glucose_solve(glucose_solver* s) {
-    // s->eliminate(true);
+    if (s->preprocessing) {
+        s->eliminate(true);
+    }
     if (!s->okay())
         return 0;
     return s->solve();

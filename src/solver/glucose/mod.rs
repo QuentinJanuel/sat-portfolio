@@ -24,10 +24,19 @@ use super::config::Config;
 
 /// The Glucose solver
 #[derive(Clone)]
-pub struct Glucose;
+pub struct Glucose {
+    preprocessing: bool,
+}
 
 impl Glucose {
-    pub fn new() -> Self { Self }
+    pub fn new() -> Self {
+        Glucose {
+            preprocessing: false,
+        }
+    }
+    pub fn enable_preprocessing(&mut self) {
+        self.preprocessing = true;
+    }
 }
 
 impl Solver for Glucose {
@@ -39,7 +48,7 @@ impl Solver for Glucose {
         // Uses the C bindings to create a glucose solver,
         // fill it with the CNF, and solve the CNF
         unsafe {
-            let ptr = bindings::glucose_new();
+            let ptr = bindings::glucose_new(self.preprocessing as i32);
             let mut m_vars: HashMap<Var, i32> = HashMap::new();
             for clause in cnf.get_clauses() {
                 if config.get_kill() { break; }
