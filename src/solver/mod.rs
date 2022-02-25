@@ -16,7 +16,7 @@ use config::{Config, ConfigAll};
 /// Represents a SAT solver.
 /// The solver can be used either to find a model of a CNF formula,
 /// if one exists, or to enumerate all models of a CNF formula.
-pub trait Solver {
+pub trait Solver: Send + Sync {
     /// Finds a model of the given CNF formula.
     /// Returns None if no model exists.
     fn solve(&self, cnf: &CNF) -> Option<Model> {

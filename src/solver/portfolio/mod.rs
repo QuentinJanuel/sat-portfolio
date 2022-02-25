@@ -9,17 +9,14 @@ use std::{
     sync::{mpsc, Arc},
 };
 
-pub trait ThreadableSolver: Solver + Send + Sync {}
-impl<T: Solver + Send + Sync> ThreadableSolver for T {}
-
 /// A portfolio of SAT solvers
 pub struct Portfolio {
-    solvers: Vec<Arc<dyn ThreadableSolver>>,
+    solvers: Vec<Arc<dyn Solver>>,
 }
 
 impl Portfolio {
     /// Creates a new portfolio of solvers with the given solvers
-    pub fn from(solvers: Vec<Arc<dyn ThreadableSolver>>) -> Self {
+    pub fn from(solvers: Vec<Arc<dyn Solver>>) -> Self {
         if solvers.len() == 0 {
             panic!("No solvers provided");
         }
