@@ -12,7 +12,7 @@ extern "C" {
 
 glucose_solver* glucose_new() {
     glucose_solver* s = new glucose_solver_t();
-    s->simplify();
+    s->eliminate(true);
     return s;
 }
 
@@ -49,6 +49,7 @@ glucose_var glucose_lit_to_var(glucose_lit p) {
 }
 
 glucose_bool glucose_solve(glucose_solver* s) {
+    // s->eliminate(true);
     if (!s->okay())
         return 0;
     return s->solve();
