@@ -46,6 +46,7 @@ fn main() {
     );
     // Minisat
     cc::Build::new()
+        .warnings(false)
         .cpp(true)
         .include("c/minisat")
         .include("c/lib")
@@ -53,15 +54,18 @@ fn main() {
         .file("c/minisat/minisat/simp/SimpSolver.cc")
         .file("c/minisat/minisat/utils/System.cc")
         .file("c/minisat-c-bindings/minisat.cc")
+        .flag_if_supported("-fpermissive")
         .compile("minisat");
     // Manysat
     cc::Build::new()
+        .warnings(false)
         .cpp(true)
         .include("c/lib")
         .include("c/manysat")
         .file("c/manysat/core/Solver.cc")
         .file("c/manysat/core/Cooperation.cc")
         .file("c/manysat-c-bindings/manysat.cc")
+        .flag_if_supported("-fpermissive")
         .compile("manysat");
     // Glucose
     let mut includes = vec![
@@ -92,6 +96,7 @@ fn main() {
         .warnings(false)
         .cpp(true)
         .includes(includes)
+        .flag_if_supported("-fpermissive")
         // .file("c/glucose/parallel/MultiSolvers.cc")
         // .file("c/glucose/parallel/SolverConfiguration.cc")
         // .file("c/glucose/parallel/ParallelSolver.cc")
