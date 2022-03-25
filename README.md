@@ -19,3 +19,16 @@ There are two types of solvers:
 - Christophe Yang
 - Quentin Januel
 - Sylvain Declercq
+
+## Prerequisites
+### MacOS
+You need to have the `libomp` library installed. If you don't, you can install it with
+```bash
+brew install libomp
+```
+
+## Git submodules
+Make sure to clone the submodules. If you haven't, just run
+```bash
+git submodule update --init --recursive
+```
