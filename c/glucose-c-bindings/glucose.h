@@ -11,7 +11,7 @@ extern const glucose_lbool glucose_ltrue = 1;
 extern const glucose_lbool glucose_lfalse = 0;
 extern const glucose_lbool glucose_lundef = -1;
 
-glucose_solver* glucose_new(glucose_bool preprocessing);
+glucose_solver* glucose_new(glucose_bool preprocessing, glucose_bool parallel);
 void glucose_delete(glucose_solver* s);
 void glucose_add_clause_begin(glucose_solver* s);
 void glucose_add_clause_add_lit(glucose_solver* s, glucose_lit p);

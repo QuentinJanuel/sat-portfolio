@@ -47,7 +47,10 @@ impl Solver for Glucose {
         // Uses the C bindings to create a glucose solver,
         // fill it with the CNF, and solve the CNF
         unsafe {
-            let ptr = bindings::glucose_new(self.preprocessing as i32);
+            let ptr = bindings::glucose_new(
+                self.preprocessing as i32,
+                true as i32,
+            );
             let mut m_vars: HashMap<Var, i32> = HashMap::new();
             for clause in cnf.get_clauses() {
                 if config.get_kill() { break; }
@@ -89,7 +92,7 @@ impl Solver for Glucose {
                     } else if lbool == bindings::glucose_lfalse {
                         model.add(Lit::neg(var));
                     } else {
-                        unreachable!()
+                        model.add(Lit::pos(var));
                     }
                 }
                 Some(model)

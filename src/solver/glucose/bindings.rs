@@ -14,7 +14,7 @@ pub const glucose_ltrue: glucose_lbool = 1;
 pub const glucose_lfalse: glucose_lbool = 0;
 pub const glucose_lundef: glucose_lbool = -1;
 extern "C" {
-    pub fn glucose_new(preprocessing: glucose_bool) -> *mut glucose_solver;
+    pub fn glucose_new(preprocessing: glucose_bool, parallel: glucose_bool) -> *mut glucose_solver;
 }
 extern "C" {
     pub fn glucose_delete(s: *mut glucose_solver);
