@@ -2,6 +2,7 @@ use crate::cnf::{
     Clause,
     Lit,
     Var,
+    CNF,
 };
 
 /// Represents a model of a CNF formula.
@@ -56,6 +57,29 @@ impl Model {
             .filter(|l| l.get_sign())
             .map(|l| l.get_var())
             .collect()
+    }
+    /// Checks if the model is a model of the given CNF formula.
+    pub fn is_model_of(&self, cnf: &CNF) -> bool {
+        let pos_vars = self.get_pos_vars();
+        cnf.get_clauses()
+            .iter()
+            .all(|c| {
+                // Check if self is a model of the clause c
+                // It is if any of its literals is satisfied
+                c.get_lits()
+                    .iter()
+                    .any(|lit| {
+                        let is_in_model = pos_vars.contains(&lit.get_var());
+                        // The literal is satisfied
+                        // if is is positive and in pos_vars
+                        // or negative and not in pos_vars
+                        if lit.get_sign() {
+                            is_in_model
+                        } else {
+                            !is_in_model
+                        }
+                    })
+            })
     }
 }
 
