@@ -45,7 +45,7 @@ fn test_solvers() {
         #[cfg(not(target_os = "windows"))]
         test_solver({
             let mut s = Glucose::new();
-            s.enable_syrup();
+            // s.enable_syrup();
             s
         });
     }
