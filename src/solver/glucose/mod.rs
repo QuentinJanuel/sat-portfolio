@@ -25,16 +25,25 @@ use super::config::Config;
 /// The Glucose solver
 pub struct Glucose {
     preprocessing: bool,
+    syrup: bool,
 }
 
 impl Glucose {
     pub fn new() -> Self {
         Glucose {
             preprocessing: false,
+            syrup: false,
         }
     }
     pub fn enable_preprocessing(&mut self) {
         self.preprocessing = true;
+    }
+}
+
+#[cfg(not(target_os = "windows"))]
+impl Glucose {
+    pub fn enable_syrup(&mut self) {
+        self.syrup = true;
     }
 }
 
@@ -49,7 +58,7 @@ impl Solver for Glucose {
         unsafe {
             let ptr = bindings::glucose_new(
                 self.preprocessing as i32,
-                true as i32,
+                self.syrup as i32,
             );
             let mut m_vars: HashMap<Var, i32> = HashMap::new();
             for clause in cnf.get_clauses() {
