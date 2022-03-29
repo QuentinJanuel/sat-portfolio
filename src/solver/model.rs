@@ -22,6 +22,21 @@ impl Model {
         }
         self.0.push(lit);
     }
+    /// Updates the sign of a given variable in the model.
+    pub fn set_pos(&mut self, var: Var, pos: bool) {
+        let lit = if pos {
+            Lit::pos(var)
+        } else {
+            Lit::neg(var)
+        };
+        for l in self.0.iter_mut() {
+            if l.get_var() == var {
+                *l = lit;
+                return;
+            }
+        }
+        self.add(lit);
+    }
     /// Returns true if the given variable is already defined
     /// in the model.
     pub fn contains(&self, var: Var) -> bool {
@@ -55,6 +70,14 @@ impl Model {
         self.0
             .iter()
             .filter(|l| l.get_sign())
+            .map(|l| l.get_var())
+            .collect()
+    }
+    /// Returns the list of negative variables
+    pub fn get_neg_vars(&self) -> Vec<Var> {
+        self.0
+            .iter()
+            .filter(|l| !l.get_sign())
             .map(|l| l.get_var())
             .collect()
     }
