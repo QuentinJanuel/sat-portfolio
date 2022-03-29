@@ -4,12 +4,12 @@
 [submodule "c/minisat-c-bindings"]
 	path = c/minisat-c-bindings
 	url = https://github.com/niklasso/minisat-c-bindings.git
-# [submodule "c/manysat"]
-# 	path = c/manysat
-# 	url = https://github.com/rohitjha/manysat.git
-[submodule "c/glucose"]
-	path = c/glucose
-	url = https://github.com/QuentinJanuel/glucose.git
+[submodule "c/maplesat"]
+	path = c/maplesat
+	url = https://github.com/QuentinJanuel/maplesat
 [submodule "c/manysat"]
 	path = c/manysat
 	url = https://github.com/QuentinJanuel/manysat
+[submodule "c/glucose"]
+	path = c/glucose
+	url = https://github.com/QuentinJanuel/glucose.git

@@ -24,6 +24,29 @@ fn download(url: &str, to: &str) {
         .expect(&format!("Failed to download {}", to));
 }
 
+fn add_pthread(includes: &mut Vec<&str>) {
+    if cfg!(windows) {
+        includes.push("c/pthread-win32/include");
+        let arch = if cfg!(target_arch = "x86_64") {
+            "x64"
+        } else if cfg!(target_arch = "x86") {
+            "x86"
+        } else {
+            panic!("Unsupported architecture");
+        };
+        println!(
+            "cargo:rustc-link-search=native={}",
+            Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("c")
+                .join("pthread-win32")
+                .join("lib")
+                .join(arch)
+                .display(),
+        );
+        println!("cargo:rustc-link-lib=pthreadVC3");
+    }
+}
+
 // fn make_bindings(name: &str) {
 //     println!("cargo:rerun-if-changed=src/solver/{}/bindings.rs", name);
 //     bindgen::Builder::default()
@@ -67,31 +90,24 @@ fn main() {
         .file("c/manysat-c-bindings/manysat.cc")
         .flag_if_supported("-fpermissive")
         .compile("manysat");
+    // Maplesat
+    cc::Build::new()
+        .warnings(false)
+        .cpp(true)
+        .include("c/maplesat")
+        .include("c/lib")
+        .file("c/maplesat/core/Solver.cc")
+        .file("c/maplesat/simp/SimpSolver.cc")
+        .file("c/maplesat/utils/System.cc")
+        .file("c/maplesat-c-bindings/maplesat.cc")
+        .flag_if_supported("-fpermissive")
+        .compile("maplesat");
     // Glucose
     let mut includes = vec![
         "c/lib",
         "c/glucose",
     ];
-    if cfg!(windows) {
-        includes.push("c/pthread-win32/include");
-        let arch = if cfg!(target_arch = "x86_64") {
-            "x64"
-        } else if cfg!(target_arch = "x86") {
-            "x86"
-        } else {
-            panic!("Unsupported architecture");
-        };
-        println!(
-            "cargo:rustc-link-search=native={}",
-            Path::new(env!("CARGO_MANIFEST_DIR"))
-                .join("c")
-                .join("pthread-win32")
-                .join("lib")
-                .join(arch)
-                .display(),
-        );
-        println!("cargo:rustc-link-lib=pthreadVC3");
-    }
+    add_pthread(&mut includes);
     cc::Build::new()
         .warnings(false)
         .cpp(true)
@@ -111,5 +127,6 @@ fn main() {
     // Bindings
     // make_bindings("minisat");
     // make_bindings("manysat");
+    // make_bindings("maplesat");
     // make_bindings("glucose");
 }

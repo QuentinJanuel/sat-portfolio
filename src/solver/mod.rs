@@ -2,6 +2,7 @@ mod model;
 pub mod dpll;
 pub mod minisat;
 pub mod manysat;
+pub mod maplesat;
 pub mod glucose;
 #[macro_use]
 pub mod portfolio;

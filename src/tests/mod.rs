@@ -4,6 +4,7 @@ use crate::{
         dpll::DPLL,
         minisat::Minisat,
         manysat::Manysat,
+        maplesat::Maplesat,
         glucose::Glucose,
     },
 };
@@ -27,6 +28,7 @@ fn test_solvers() {
     test_solver(DPLL::new());
     test_solver(Minisat::new());
     test_solver(Manysat::new());
+    test_solver(Maplesat::new());
     test_solver(portfolio![
         DPLL::new(),
         Minisat::new(),
