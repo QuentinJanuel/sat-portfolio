@@ -10,3 +10,6 @@
 [submodule "c/glucose"]
 	path = c/glucose
 	url = https://github.com/QuentinJanuel/glucose.git
+[submodule "c/maplesat"]
+	path = c/maplesat
+	url = https://github.com/QuentinJanuel/maplesat
