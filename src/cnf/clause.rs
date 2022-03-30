@@ -1,4 +1,7 @@
-use super::Lit;
+use super::{
+    Lit,
+    Var,
+};
 
 /// Represents a clause in a CNF formula.
 /// i.e. a disjunction of literals.
@@ -41,7 +44,7 @@ impl Clause {
         self.lits.contains(&lit)
     }
     /// Returns true if the clause contains the given variable.
-    pub fn contains_var(&self, var: usize) -> bool {
+    pub fn contains_var(&self, var: Var) -> bool {
         self.lits.iter().any(|l| l.get_var() == var)
     }
     /// Removes the given literal from the clause.
