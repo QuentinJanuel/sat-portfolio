@@ -69,16 +69,24 @@ impl Model {
     pub fn get_pos_vars(&self) -> Vec<Var> {
         self.0
             .iter()
-            .filter(|l| l.get_sign())
-            .map(|l| l.get_var())
+            .filter_map(|l|
+                if l.get_sign() {
+                    Some(l.get_var())
+                } else {
+                    None
+                })
             .collect()
     }
     /// Returns the list of negative variables
     pub fn get_neg_vars(&self) -> Vec<Var> {
         self.0
             .iter()
-            .filter(|l| !l.get_sign())
-            .map(|l| l.get_var())
+            .filter_map(|l|
+                if l.get_sign() {
+                    None
+                } else {
+                    Some(l.get_var())
+                })
             .collect()
     }
     /// Checks if the model is a model of the given CNF formula.
