@@ -22,6 +22,10 @@ impl Model {
         }
         self.0.push(lit);
     }
+    /// Returns the literal that matches with the given variable as mutable
+    pub fn get_lit_mut(&mut self, var: Var) -> Option<&mut Lit> {
+        self.0.iter_mut().find(|lit| lit.get_var() == var)
+    }
     /// Updates the sign of a given variable in the model.
     pub fn set_pos(&mut self, var: Var, pos: bool) {
         let lit = if pos {
