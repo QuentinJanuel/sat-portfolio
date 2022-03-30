@@ -40,6 +40,10 @@ impl Clause {
     pub fn contains(&self, lit: Lit) -> bool {
         self.lits.contains(&lit)
     }
+    /// Returns true if the clause contains the given variable.
+    pub fn contains_var(&self, var: usize) -> bool {
+        self.lits.iter().any(|l| l.get_var() == var)
+    }
     /// Removes the given literal from the clause.
     pub fn remove(&mut self, lit: Lit) {
         self.lits.retain(|l| l != &lit);
