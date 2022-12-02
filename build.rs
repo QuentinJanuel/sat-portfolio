@@ -1,28 +1,28 @@
 use std::{
-    io,
-    fs::{
-        self,
-        File,
-    },
+    // io,
+    // fs::{
+    //     self,
+    //     File,
+    // },
     path::Path,
 };
 
-fn download(url: &str, to: &str) {
-    let path = Path::new(to);
-    if path.is_file() {
-        println!("File already exists: {}", to);
-        return;
-    }
-    let parent = path.parent().unwrap();
-    let mut resp = reqwest::blocking::get(url)
-        .expect(&format!("Failed to get response for {}", url));
-    fs::create_dir_all(parent)
-        .expect("Failed to create parent directory");
-    let mut out = File::create(path)
-        .expect(&format!("Failed to create file {}", to));
-    io::copy(&mut resp, &mut out)
-        .expect(&format!("Failed to download {}", to));
-}
+// fn download(url: &str, to: &str) {
+//     let path = Path::new(to);
+//     if path.is_file() {
+//         println!("File already exists: {}", to);
+//         return;
+//     }
+//     let parent = path.parent().unwrap();
+//     let mut resp = reqwest::blocking::get(url)
+//         .expect(&format!("Failed to get response for {}", url));
+//     fs::create_dir_all(parent)
+//         .expect("Failed to create parent directory");
+//     let mut out = File::create(path)
+//         .expect(&format!("Failed to create file {}", to));
+//     io::copy(&mut resp, &mut out)
+//         .expect(&format!("Failed to download {}", to));
+// }
 
 fn add_pthread(includes: &mut Vec<&str>) {
     if cfg!(windows) {
@@ -59,14 +59,14 @@ fn add_pthread(includes: &mut Vec<&str>) {
 // }
 
 fn main() {
-    download(
-        "https://raw.githubusercontent.com/madler/zlib/master/zlib.h",
-        "c/lib/zlib.h",
-    );
-    download(
-        "https://raw.githubusercontent.com/madler/zlib/master/zconf.h",
-        "c/lib/zconf.h",
-    );
+    // download(
+    //     "https://raw.githubusercontent.com/madler/zlib/master/zlib.h",
+    //     "c/lib/zlib.h",
+    // );
+    // download(
+    //     "https://raw.githubusercontent.com/madler/zlib/master/zconf.h",
+    //     "c/lib/zconf.h",
+    // );
     // Minisat
     cc::Build::new()
         .warnings(false)
